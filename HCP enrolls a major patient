@@ -1,0 +1,527 @@
+package enrollment;
+
+import java.io.IOException;
+import java.time.Duration;
+
+import org.apache.poi.xssf.usermodel.XSSFRow;
+
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+
+import org.openqa.selenium.WebElement;
+
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class HCPmajor {
+
+	public static void main(String[] args) throws InterruptedException, IOException {
+
+		WebDriver driver = new ChromeDriver();
+
+		driver.manage().window().maximize();
+
+		String originalWindow = driver.getWindowHandle();
+
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+
+		driver.get("https://bi-patient-eu--pspdev1.sandbox.my.site.com/Branded/s/");
+
+		WebElement hcpbutton = driver.findElement(
+				By.xpath("(//button[@class='button-Div' and text()='I am a Healthcare Professional'])[1]"));
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(70));
+
+		wait.until(ExpectedConditions.elementToBeClickable(hcpbutton)).click();
+
+		Thread.sleep(5000);
+
+		WebElement enroll = driver
+				.findElement(By.xpath("//button[@class='button-Div' and text()='Enroll Your Patient']"));
+
+		WebDriverWait wait0 = new WebDriverWait(driver, Duration.ofSeconds(80));
+
+		wait0.until(ExpectedConditions.elementToBeClickable(enroll)).click();
+
+		Thread.sleep(5000);
+
+		WebElement next = driver.findElement(By.xpath("//button[@class='next-button' and text()='Next'][1]"));
+		WebDriverWait wait1 = new WebDriverWait(driver, Duration.ofSeconds(60));
+		wait1.until(ExpectedConditions.elementToBeClickable(next)).click();
+
+		Thread.sleep(4000);
+
+		WebElement licenseInput = driver
+				.findElement(By.xpath("//input[@class='slds-input' and @placeholder='Enter License Number']"));
+
+		licenseInput.sendKeys("123456");
+
+		// licenseInput.click();
+
+		driver.findElement(By.xpath("//span[@class='slds-truncate' and text()='1234567']")).click();
+
+		driver.findElement(By.xpath("//button[@class='next-button' and text()='Next'][1]")).click();
+
+		String Datainput = "C:\\Users\\CVHS ADMIN\\git\\Patientselfenrollment\\Testdemo\\Datafiles\\Pantientinforeadfile.xlsx";
+
+		XSSFWorkbook Dinp = new XSSFWorkbook(Datainput);
+
+		XSSFSheet Inpsht = Dinp.getSheet("HPC enrolls a major patient");
+
+		int num = Inpsht.getLastRowNum();
+
+		for (int i = 1; i <= num; i++) {
+
+			XSSFRow Row1 = Inpsht.getRow(i);
+
+			String FirstName = Row1.getCell(0).getStringCellValue();
+
+			String LastName = Row1.getCell(1).getStringCellValue();
+
+			String Gender = Row1.getCell(3).getStringCellValue();
+
+			String Email = Row1.getCell(4).getStringCellValue();
+
+			double Phone = Row1.getCell(5).getNumericCellValue();
+
+			String Phn = String.valueOf((int) Phone);
+
+			String drug = Row1.getCell(6).getStringCellValue();
+
+			String pmc = Row1.getCell(7).getStringCellValue();
+
+			String country = Row1.getCell(8).getStringCellValue();
+
+			String city = Row1.getCell(9).getStringCellValue();
+
+			String streetaddress = Row1.getCell(10).getStringCellValue();
+
+			double pincode = Row1.getCell(11).getNumericCellValue();
+
+			String zipcode = String.valueOf((int) pincode);
+
+			if (FirstName.isEmpty()) {
+				System.out.println("firstname field is required");
+			} else {
+				System.out.println("User entered the firstname : " + FirstName);
+			}
+
+			if (LastName.isEmpty()) {
+				System.out.println("lasttname field is required");
+			} else {
+				System.out.println("User entered the lastname : " + LastName);
+			}
+			if (Gender.isEmpty()) {
+				System.out.println("gender field is required");
+			} else {
+				System.out.println("User selected the gender : " + Gender);
+			}
+			if (Email.isEmpty()) {
+				System.out.println("email field is required");
+			} else {
+				System.out.println("User entered the gmail : " + Email);
+			}
+
+			if (Phn.isEmpty()) {
+				System.out.println("phonenumber field is required");
+			} else {
+				System.out.println("User entered the gender : " + Phn);
+			}
+			if (drug.isEmpty()) {
+				System.out.println("drug field is required");
+			} else {
+				System.out.println("User selected the drug : " + drug);
+			}
+
+			driver.findElement(By.xpath("(//button[@class='next-button' and text()='Next'])[2]")).click();
+
+			Thread.sleep(3000);
+
+			WebElement Fn = driver.findElement(By.xpath("//input[@class='slds-input' and @name='FirstName']"));
+
+			Fn.clear();
+
+			Fn.sendKeys(FirstName);
+
+			WebElement Ln = driver.findElement(By.xpath("//input[@class='slds-input' and @name='LastName']"));
+
+			Ln.clear();
+
+			Ln.sendKeys(LastName);
+
+			Thread.sleep(1000);
+
+			WebElement Gn = driver.findElement(By.xpath(
+					"(//button[@class='slds-combobox__input slds-input_faux fix-slds-input_faux' and @type='button'])[1]"));
+
+			Gn.click();
+
+			switch (Gender) {
+
+			case "Female":
+
+				WebElement GnF = driver.findElement((By.xpath("//span[@class='slds-truncate' and text()='Female']")));
+
+				GnF.click();
+
+				break;
+
+			case "Male":
+
+				WebElement GnM = driver.findElement((By.xpath("//span[@class='slds-truncate' and text()='Male']")));
+
+				GnM.click();
+
+				break;
+
+			case "Other":
+
+				WebElement GnO = driver.findElement((By.xpath("//span[@class='slds-truncate' and text()='Other']")));
+
+				GnO.click();
+
+				break;
+
+			case "Prefer not to say":
+
+				WebElement GnPNS = driver
+						.findElement((By.xpath("//span[@class='slds-truncate' and text()='Prefer not to say']")));
+
+				GnPNS.click();
+
+				break;
+
+			}
+
+			Thread.sleep(20000);
+
+			WebElement Eml = driver.findElement(By.xpath("//input[@class='slds-input' and @name='Email']"));
+
+			Eml.clear();
+
+			Eml.sendKeys(Email);
+
+			WebElement Phn2 = driver.findElement(By.xpath("//input[@class='slds-input' and @name='Phone']"));
+
+			Phn2.clear();
+
+			Phn2.sendKeys(Phn);
+
+			driver.findElement(By.xpath("(//button[@class='next-button' and text()='Next'])[2]")).click();
+
+			Thread.sleep(4000);
+
+			driver.findElement(By.xpath("//button[@class='next-button' and text()='Submit']")).click();
+
+			Thread.sleep(3000);
+
+			WebElement chronic150 = driver
+					.findElement(By.xpath("//input[@class='slds-input' and @placeholder='Search Drug Name']"));
+			chronic150.sendKeys(drug);
+
+			if (drug.equals("SPEVIGO®(spesolimab) - 150mg SC (1x150mg/1mL)")) {
+				driver.findElement(By.xpath(
+						"//span[@class='slds-truncate' and text()='SPEVIGO®(spesolimab) - 150mg SC (1x150mg/1mL)']"))
+						.click();
+
+				driver.findElement(By.xpath(
+						"//button[@class='slds-combobox__input slds-input_faux fix-slds-input_faux' and @name='frequcncyunit']"))
+						.click();
+				Thread.sleep(2000);
+				driver.findElement(By.xpath("(//span[@class='slds-truncate' and text()='Every 4 Weeks (Q4W)'])[1]"))
+						.click();
+
+				driver.findElement(By.xpath("//input[@class='slds-input' and @name='Quantity']")).sendKeys("345");
+
+			}
+
+			else if (drug.equals("SPEVIGO®(spesolimab) - 300mg SC (2x150mg/1mL)")) {
+				driver.findElement(By.xpath(
+						"//span[@class='slds-truncate' and text()='SPEVIGO®(spesolimab) - 300mg SC (2x150mg/1mL)']"))
+						.click();
+
+				driver.findElement(By.xpath(
+						"//button[@class='slds-combobox__input slds-input_faux fix-slds-input_faux' and @name='frequcncyunit']"))
+						.click();
+
+				Thread.sleep(3000);
+
+				driver.findElement(By.xpath("(//span[@class='slds-truncate' and text()='Single Loading Dose'])[1]"))
+						.click();             
+
+				Thread.sleep(1000);
+
+				driver.findElement(By.xpath("//input[@class='slds-input' and @name='Quantity']")).sendKeys("312");
+
+			}
+
+			else if (drug.equals("SPEVIGO®(spesolimab) - 450mg IV (1x450mg/7.5mL)")) {
+				driver.findElement(By.xpath(
+						"//span[@class='slds-truncate' and text()='SPEVIGO®(spesolimab) - 450mg IV (1x450mg/7.5mL)']"))
+						.click();
+
+				driver.findElement(By.xpath(
+						"//button[@class='slds-combobox__input slds-input_faux fix-slds-input_faux' and @name='frequcncyunit']"))
+						.click();
+				Thread.sleep(2000);
+
+				driver.findElement(By.xpath("(//span[@class='slds-truncate' and text()='Single Dose (Day 1)'])[1]"))
+						.click();
+
+			}
+
+			else if (drug.equals("SPEVIGO®(spesolimab) - 600mg SC (4x150mg/1mL)")) {
+				driver.findElement(By.xpath(
+						"//span[@class='slds-truncate' and text()='SPEVIGO®(spesolimab) - 600mg SC (4x150mg/1mL)']"))
+						.click();
+
+				driver.findElement(By.xpath(
+						"//button[@class='slds-combobox__input slds-input_faux fix-slds-input_faux' and @name='frequcncyunit']"))
+						.click();
+
+				Thread.sleep(2000);
+
+				driver.findElement(By.xpath("(//span[@class='slds-truncate' and text()='Single Loading Dose'])[1]"))
+						.click();
+
+				driver.findElement(By.xpath("//input[@class='slds-input' and @name='Quantity']")).sendKeys("45");
+			}
+
+			else if (drug.equals("SPEVIGO®(spesolimab) - 900mg IV (2x450mg/7.5mL)")) {
+				driver.findElement(By.xpath(
+						"//span[@class='slds-truncate' and text()='SPEVIGO®(spesolimab) - 900mg IV (2x450mg/7.5mL)']"))
+						.click();
+
+				driver.findElement(By.xpath(
+						"//button[@class='slds-combobox__input slds-input_faux fix-slds-input_faux' and @name='frequcncyunit']"))
+						.click();
+
+				Thread.sleep(2000);
+
+				driver.findElement(By.xpath("(//span[@class='slds-truncate' and text()='Single Dose (Day 1)'])[1]"))
+						.click();
+			}
+
+			else {
+				System.out.println("please select an valid drug");
+			}
+
+			driver.findElement(By.xpath("//span[@class='custom-checkbox-box_Error']")).click();
+
+			Thread.sleep(15000);
+
+			driver.findElement(By.xpath("//button[@class='next-button' and text()='Submit']")).click();
+
+			Thread.sleep(10000);
+
+			WebElement heading = driver
+					.findElement(By.xpath("//h1[@class='tophead' and text()='Thanks for Enrolling your Patient!']"));
+
+			String actualheading = heading.getText();
+
+			String expectedheading = "Thanks for Enrolling your Patient!";
+
+			if (actualheading.equals(expectedheading)) {
+
+				Thread.sleep(3000);
+
+				((JavascriptExecutor) driver).executeScript("window.open()");
+
+				for (String windowHandle : driver.getWindowHandles()) {
+					if (!originalWindow.contentEquals(windowHandle)) {
+						driver.switchTo().window(windowHandle);
+						break;
+					}
+				}
+
+				driver.get(
+						"https://bi-patient-eu--pspdev1.sandbox.my.site.com/Branded/s/bi-pspb-prepopulatedpatientform");
+
+				Thread.sleep(5000);
+
+				driver.findElement(By.xpath("//button[@class='next-button next' and text()='Next']")).click();
+
+				Thread.sleep(2000);
+
+				driver.findElement(By.xpath("(//input[@class='slds-input' and @name='FirstName'])[1]"))
+						.sendKeys(FirstName);
+
+				driver.findElement(By.xpath("(//input[@class='slds-input' and @name='LastName'])[1]"))
+						.sendKeys(LastName);
+
+				Thread.sleep(18000);
+
+				driver.findElement(By.xpath("//button[@class='next-button next' and text()='Next']")).click();
+
+				Thread.sleep(1000);
+
+				driver.findElement(By.xpath("//button[@class='next-button nxt' and text()='Next']")).click();
+				
+				
+				Thread.sleep(2000);
+				
+				driver.findElement(By.xpath("//button[@class='next-button' and text()='Submit']")).click();
+				
+				Thread.sleep(2000);
+
+				driver.findElement(By.xpath(
+						"//button[@class='slds-combobox__input slds-input_faux fix-slds-input_faux' and @name='Preffered mode of communication*']"))
+						.click();
+
+				Thread.sleep(1000);
+
+				if (pmc.equals("SMS")) {
+
+					driver.findElement(By.xpath("(//span[@class='slds-truncate' and text()='SMS'])[1]")).click();
+				}
+
+				else if (pmc.equals("Email")) {
+					driver.findElement(By.xpath("(//span[@class='slds-truncate' and text()='Email'])[1]")).click();
+
+				} else if (pmc.equals("Phone")) {
+					driver.findElement(By.xpath("(//span[@class='slds-truncate' and text()='Phone'])[1]")).click();
+				}
+
+				else {
+					System.out.println("Please give a valid preferred mode of communication");
+				}
+
+				
+				
+				
+
+				
+
+				
+
+				Thread.sleep(2000);
+				
+				
+				
+
+				driver.findElement(By.xpath(
+						"//button[@class='slds-combobox__input slds-input_faux fix-slds-input_faux' and @name='Country']"))
+						.click();
+
+				Thread.sleep(1000);
+
+				if (country.equals("United Arab Emirates")) {
+					WebElement UAE = driver.findElement(
+							By.xpath("(//span[@class='slds-truncate' and text()='United Arab Emirates'])[1]"));
+					UAE.click();
+
+					wait1.until(ExpectedConditions.elementToBeClickable(By.xpath(
+							"//button[@class='slds-combobox__input slds-input_faux fix-slds-input_faux' and @id='combobox-button-32']")));
+
+					WebElement stateButton = driver.findElement(By.xpath(
+							"//button[@class='slds-combobox__input slds-input_faux fix-slds-input_faux' and @id='combobox-button-32']"));
+					stateButton.click();
+
+					WebElement stateOption = driver
+							.findElement(By.xpath("(//span[@class='slds-truncate' and text()='Sharjah'])[1]"));
+					wait1.until(ExpectedConditions.elementToBeClickable(stateOption));
+					stateOption.click();
+
+				} else if (country.equals("United Kingdom")) {
+					WebElement UK = driver
+							.findElement(By.xpath("(//span[@class='slds-truncate' and text()='United Kingdom'])[1]"));
+					UK.click();
+
+					wait1.until(ExpectedConditions.elementToBeClickable(By.xpath(
+							"//button[@class='slds-combobox__input slds-input_faux fix-slds-input_faux' and @id='combobox-button-32']")));
+
+					WebElement stateButton = driver.findElement(By.xpath(
+							"//button[@class='slds-combobox__input slds-input_faux fix-slds-input_faux' and @id='combobox-button-32']"));
+					stateButton.click();
+
+					WebElement stateOption = driver
+							.findElement(By.xpath("(//span[@class='slds-truncate' and text()='England'])[1]"));
+					wait1.until(ExpectedConditions.elementToBeClickable(stateOption));
+					stateOption.click();
+
+				} else if (country.equals("United States")) {
+					WebElement US = driver
+							.findElement(By.xpath("(//span[@class='slds-truncate' and text()='United States'])[1]"));
+					US.click();
+
+					wait1.until(ExpectedConditions.elementToBeClickable(By.xpath(
+							"//button[@class='slds-combobox__input slds-input_faux fix-slds-input_faux' and @id='combobox-button-32']")));
+
+					WebElement stateButton = driver.findElement(By.xpath(
+							"//button[@class='slds-combobox__input slds-input_faux fix-slds-input_faux' and @id='combobox-button-32']"));
+					stateButton.click();
+
+					Thread.sleep(2000);
+					WebElement usState = driver
+							.findElement(By.xpath("(//span[@class='slds-truncate' and text()='Texas'])[1]"));
+					wait1.until(ExpectedConditions.elementToBeClickable(usState));
+					js.executeScript("arguments[0].scrollIntoView();", usState);
+					usState.click();
+
+				} else {
+					System.out.println("Unable to select the Country");
+				}
+
+				Thread.sleep(1000);
+
+				driver.findElement(By.xpath("//input[@class='slds-input' and @placeholder ='Enter City Name']"))
+						.sendKeys(city);
+
+				driver.findElement(By.xpath("//textarea[@class='slds-textarea' and @placeholder='Enter Address']"))
+						.sendKeys(streetaddress);
+
+				driver.findElement(By.xpath("//input[@class='slds-input' and @placeholder='Enter Zip Code']"))
+						.sendKeys(zipcode, Keys.BACK_SPACE, Keys.BACK_SPACE);
+
+				Thread.sleep(1000);
+
+				driver.findElement(By.xpath("//span[@class='custom-checkbox-box_Error']")).click();
+
+				Thread.sleep(1000);
+
+				driver.findElement(By.xpath("//button[@class='next-button' and text()='Submit']")).click();
+				
+				
+				
+				
+			WebElement head=	driver.findElement(By.xpath("//h1[@class='tophead' and text()='Thanks for verifying your information!']"));
+				
+				
+				String actualhead = head.getText();
+				
+				
+				String expectedhead= "Thanks for verifying your information!";
+				
+				
+				if(actualhead.equals(expectedhead)) {
+					System.out.println("HCP successfully enrolled a major patient. The patient will receive a password setup through email. ");
+				}
+				
+				
+				else {
+					System.out.println("please enroll a major form");
+				}
+				
+				
+
+			}
+
+			else {
+
+				System.out.println("please enrolls a HCP with minor");
+			}
+
+		}
+
+	}
+
+}
